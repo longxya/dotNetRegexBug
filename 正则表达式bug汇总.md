@@ -158,7 +158,7 @@ Output:
     string pattern=@"\d+((?'x'[a-z-[b]]+)).(?<=(?'2-1'(?'x1'.)).{9})b(?(2)(?'Group2Captured'1)|(?'Group2NotCaptured'2))(?'xx'\2)";
     try
     {
-    	Match matchInterpreted = new Regex(pattern, RegexOptions.None).Match(input);//如果在是在wpf下，这里会抛出异常
+    	Match matchInterpreted = new Regex(pattern, RegexOptions.None).Match(input);
     	Console.WriteLine($"Interpreted : {matchInterpreted.Success}");
     }catch(Exception ex)
     {
