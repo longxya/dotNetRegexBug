@@ -233,6 +233,35 @@ Output:
     Compiled Match : 0 => 5
     Compiled Match Value: xbb31
     Compiled Group2 Capture : 1
+In certain situations, it also seems that the input length is not "checked".
+
+    using System.Text.RegularExpressions;
+    
+    string input = "000000123xzacb";
+    string pattern=@"(?i)\d+((?'x'[a-z-[b]]+)).(?<=(?'2-1'(?'21'..)).{9}[a-z]{0})(?'refer'\2)za";
+    try
+    {
+    	Match matchInterpreted = new Regex(pattern, RegexOptions.None).Match(input);
+    }catch(Exception ex)
+    {
+    	Console.WriteLine($"Interpreted Exception: {ex.Message}");
+    }
+    
+    
+    try
+    {
+    	Match matchCompiled = new Regex(pattern, RegexOptions.Compiled).Match(input);
+    	Console.WriteLine($"Compiled Match: {matchCompiled.Index} => {matchCompiled.Index+matchCompiled.Length}");
+    	Console.WriteLine($"Compiled refer: {matchCompiled.Groups["refer"].Index} => {matchCompiled.Groups["refer"].Index+matchCompiled.Groups["refer"].Length}");
+    }catch(Exception ex)
+    {
+    	Console.WriteLine($"Compiled Exception: {ex.Message}");
+    }
+Output:
+
+    Interpreted Exception: Index was outside the bounds of the array.
+    Compiled Match: 0 => 12
+    Compiled refer: 10 => 14
 
 For a group with negative length capture, performing a balancing group pop operation, if you consider the negative length capture as part of the captures and continue popping until all captures (including negative length captures) are cleared, then the first attempt to retrieve the group information via `Match.Group[groupName]` or `Match.Group[groupNumber]` will throw an exception. On the second attempt, it will return null, and all subsequent groups after this group will also be null.
 
