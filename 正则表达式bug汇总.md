@@ -230,6 +230,36 @@ Output:
     Compiled Match : 0 => 5
     Compiled Match Value: xbb31
     Compiled Group2 Capture : 1
+某些情况下，似乎也不会"检查"input是否够长
+
+    using System.Text.RegularExpressions;
+    
+    string input = "000000123xzacb";
+    string pattern=@"(?i)\d+((?'x'[a-z-[b]]+)).(?<=(?'2-1'(?'21'..)).{9}[a-z]{0})(?'refer'\2)za";
+    try
+    {
+    	Match matchInterpreted = new Regex(pattern, RegexOptions.None).Match(input);
+    }catch(Exception ex)
+    {
+    	Console.WriteLine($"Interpreted Exception: {ex.Message}");
+    }
+    
+    
+    try
+    {
+    	Match matchCompiled = new Regex(pattern, RegexOptions.Compiled).Match(input);
+    	Console.WriteLine($"Compiled Match: {matchCompiled.Index} => {matchCompiled.Index+matchCompiled.Length}");
+    	Console.WriteLine($"Compiled refer: {matchCompiled.Groups["refer"].Index} => {matchCompiled.Groups["refer"].Index+matchCompiled.Groups["refer"].Length}");
+    }catch(Exception ex)
+    {
+    	Console.WriteLine($"Compiled Exception: {ex.Message}");
+    }
+Output:
+
+    Interpreted Exception: Index was outside the bounds of the array.
+    Compiled Match: 0 => 12
+    Compiled refer: 10 => 14
+
 
 对有负长度捕获的捕获组，进行平衡组出栈，如果把负长度捕获也算进捕获中，一直出栈到所有捕获内容（包括负长度捕获）清空，则第一次通过``Match.Group[groupName]``或``Match.Group[groupNumber]``来获取该捕获组信息时，会抛出异常，第二次获取时会返回null，并且这个组之后的所有组都是null
 
