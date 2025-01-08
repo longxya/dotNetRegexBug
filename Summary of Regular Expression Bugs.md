@@ -118,6 +118,7 @@ In this example, if Group2 has no capture, `(?(2)1|2)` should match the `no` bra
 
 However, if the content matched by `exp` is exactly two characters ahead of the latest capture of `g2`, `g2` will behave quite "normally".  
 But not entirely normal; after the push and pop operations on Group 2 with `(?'2')(?'-2')`, Group 2 will either have no capture, causing the subsequent `(?(2)1|2)` to match 2, or Group 2 should initially exhibit the property of having a capture.  
+
     using System.Text.RegularExpressions;
     
     string input = "00123xzacvb21";
@@ -306,7 +307,6 @@ Output:
     Interpreted Exception: Index was outside the bounds of the array.
     Compiled : True
     Compiled Match : 0 => 14
-> 
     Compiled Match Value: 000123xzacvb11
     Compiled Exception: Index was outside the bounds of the array.
     Compiled Group2 is null: True
